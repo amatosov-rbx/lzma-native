@@ -13,7 +13,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [windows-latest, macOS-latest, ubuntu-latest]
+        os: [windows-2019, macOS-latest, ubuntu-latest]
         node-version: [12.x, 14.x, 16.x]
 
     steps:
@@ -24,14 +24,8 @@ jobs:
         uses: actions/setup-node@v2.3.0
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Add msbuild to PATH
-        if: matrix.os == 'windows-latest'
-        uses: microsoft/setup-msbuild@v1.1
-        with:
-          vs-version: '[16.4,16.5)'
-          msbuild-architecture: x64
       - name: Windows Setup
-        if: matrix.os == 'windows-latest'
+        if: matrix.os == 'windows-2019'
         run: npm run prepare-win32
       - name: Install
         run: npm install
@@ -42,16 +36,16 @@ jobs:
 
   prebuild:
     needs: test
-    runs-on: ${{ matrix.os }}-latest
+    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [windows, macOS, ubuntu]
+        os: [windows-2019, macOS-latest, ubuntu-latest]
         arch: [x64, arm64]
         exclude:
-          - os: windows
+          - os: windows-2019
             arch: arm64
         include:
-          - os: windows
+          - os: windows-2019
             arch: ia32
 
     steps:
@@ -62,14 +56,10 @@ jobs:
         uses: actions/setup-node@v2.3.0
         with:
           node-version: 12.x
-      - name: Add msbuild to PATH
-        if: matrix.os == 'windows'
-        uses: microsoft/setup-msbuild@v1.1
-        with:
-          vs-version: '[16.4,16.5)'
-          msbuild-architecture: x64
+
+
       - name: Windows Setup
-        if: matrix.os == 'windows'
+        if: matrix.os == 'windows-2019'
         run: npm run prepare-win32
       - name: Install
         run: npm install
