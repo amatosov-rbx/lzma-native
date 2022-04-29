@@ -25,11 +25,8 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - name: Add msbuild to PATH
-        if: matrix.os == 'windows'
+        if: matrix.os == 'windows-latest'
         uses: microsoft/setup-msbuild@v1.1
-        with:
-          vs-version: '[16.4,16.5)'
-          msbuild-architecture: x64
       - name: Windows Setup
         if: matrix.os == 'windows-latest'
         run: npm run prepare-win32
@@ -62,8 +59,9 @@ jobs:
         uses: actions/setup-node@v2.3.0
         with:
           node-version: 12.x
-
-
+      - name: Add msbuild to PATH
+        if: matrix.os == 'windows'
+        uses: microsoft/setup-msbuild@v1.1
       - name: Windows Setup
         if: matrix.os == 'windows'
         run: npm run prepare-win32
